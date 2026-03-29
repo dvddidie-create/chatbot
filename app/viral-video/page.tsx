@@ -1,43 +1,51 @@
 import React from 'react';
+import { useSession } from 'next-auth/react';
 
 const ViralVideoApp = () => {
-    // State to manage script, assets, and video
-    const [script, setScript] = React.useState('');
-    const [assets, setAssets] = React.useState([]);
-    const [video, setVideo] = React.useState(null);
+  const { data: session, status } = useSession();
 
-    // Step 1: Generate Script
-    const generateScript = async () => {
-        // Logic to generate script
-        const generatedScript = 'This is a dummy script generated for the AI Viral Video App.';
-        setScript(generatedScript);
-    };
+  // State management can be done using useState or any state management library
+  const [script, setScript] = React.useState('');
+  const [assets, setAssets] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
 
-    // Step 2: Generate Assets
-    const generateAssets = async () => {
-        // Logic to generate video assets
-        const generatedAssets = ['asset1.png', 'asset2.png', 'asset3.mp4'];
-        setAssets(generatedAssets);
-    };
+  // This function simulates script generation
+  const generateScript = async () => {
+    setLoading(true);
+    // Simulated script generation logic
+    const generatedScript = 'Generated Video Script';
+    setScript(generatedScript);
+    setLoading(false);
+  };
 
-    // Step 3: Render Video
-    const renderVideo = async () => {
-        // Logic to render video using generated script and assets
-        const renderedVideo = 'video-output.mp4';
-        setVideo(renderedVideo);
-    };
+  // This function simulates asset creation
+  const createAssets = async () => {
+    setLoading(true);
+    // Simulated asset creation logic
+    const newAssets = ['asset1.png', 'asset2.mp4'];
+    setAssets(newAssets);
+    setLoading(false);
+  };
 
-    return (
-        <div>
-            <h1>AI Viral Video App</h1>
-            <button onClick={generateScript}>Generate Script</button>
-            <button onClick={generateAssets}>Generate Assets</button>
-            <button onClick={renderVideo}>Render Video</button>
-            {script && <p>Script: {script}</p>}
-            {assets.length > 0 && <p>Assets: {assets.join(', ')}</p>}
-            {video && <p>Rendered Video: {video}</p>}
-        </div>
-    );
+  // Render the video based on the state
+  const renderVideo = () => {
+    if (loading) return <p>Loading...</p>;
+    // Render logic for the video using the script and assets
+    return <div>Video is ready to be rendered with script: {script}</div>;
+  };
+
+  // Check user authentication
+  if (status === 'loading') return <p>Loading session...</p>;
+  if (status === 'unauthenticated') return <p>You must be logged in to access this app.</p>;
+
+  return (
+    <div>
+      <h1>Viral Video App</h1>
+      <button onClick={generateScript}>Generate Script</button>
+      <button onClick={createAssets}>Create Assets</button>
+      {renderVideo()}
+    </div>
+  );
 };
 
 export default ViralVideoApp;
